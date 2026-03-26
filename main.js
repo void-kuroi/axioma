@@ -1,22 +1,50 @@
 // =========================================
-// 1. CURSOR GLOBAL
+// 1. CURSOR GLOBAL & 4. ESTELAS FANTASMA
 // =========================================
 const cursorX = document.getElementById('cursor-x-glitch');
+const ghostContainer = document.getElementById('cursor-ghost-container');
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+let lastPos = { x: mouse.x, y: mouse.y };
+let speed = 0;
+
 document.addEventListener('mousemove', (e) => { 
+    lastPos.x = mouse.x; lastPos.y = mouse.y;
     mouse.x = e.clientX; mouse.y = e.clientY;
-    cursorX.style.left = e.clientX + 'px'; cursorX.style.top = e.clientY + 'px'; 
+    
+    // Calculamos velocidad para la estela
+    speed = Math.sqrt(Math.pow(mouse.x - lastPos.x, 2) + Math.pow(mouse.y - lastPos.y, 2));
+
+    cursorX.style.left = mouse.x + 'px'; cursorX.style.top = mouse.y + 'px'; 
+    
+    // Solo creamos estela si el ratón se mueve lo suficientemente rápido
+    if (speed > 5) {
+        createGhost();
+    }
 });
+
+function createGhost() {
+    const ghost = document.createElement('div');
+    ghost.classList.add('cursor-ghost');
+    ghost.innerHTML = "X";
+    ghost.style.left = mouse.x + 'px';
+    ghost.style.top = mouse.y + 'px';
+    ghostContainer.appendChild(ghost);
+    
+    // Eliminamos la estela tras la animación
+    setTimeout(() => { ghost.remove(); }, 150);
+}
+
 document.addEventListener('mousedown', () => cursorX.classList.add('visor-clic'));
 document.addEventListener('mouseup', () => cursorX.classList.remove('visor-clic'));
 
 // =========================================
-// 2. MALLA DE PUNTOS CON OPTIMIZACIÓN DE ENERGÍA
+// 2. MALLA DE PUNTOS CON OPTIMIZACIÓN
 // =========================================
 const canvas = document.getElementById('mesh-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
-let isTabActive = true; // Control de energía
+let isTabActive = true; 
+let meshActive = true; // Control extra para Matrix
 
 document.addEventListener("visibilitychange", () => { isTabActive = !document.hidden; });
 
@@ -47,7 +75,7 @@ class Particle {
 for (let i = 0; i < 240; i++) particles.push(new Particle());
 
 function animateMesh() {
-    if (isTabActive) { // Solo dibuja si el usuario está en la pestaña (Ahorro de batería)
+    if (isTabActive && meshActive) { // Solo si pestaña activa y Matrix apagada
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (let i = 0; i < particles.length; i++) {
             particles[i].update(); particles[i].draw();
@@ -67,8 +95,41 @@ function animateMesh() {
 animateMesh();
 
 // =========================================
-// 3. EFECTO CIFRADO (SCRAMBLE) EN TÍTULOS
+// 3.1 MOTOR MATRIX RED RAIN (Roja chillona)
 // =========================================
+const mCanvas = document.getElementById('matrix-canvas');
+const mCtx = mCanvas.getContext('2d');
+const mCharSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$#@%&*";
+let mRainActive = false;
+let mColumns;
+let mDrops = [];
+
+function resizeMatrix() { mCanvas.width = window.innerWidth; mCanvas.height = window.innerHeight; mColumns = Math.floor(mCanvas.width / 16); mDrops = new Array(mColumns).fill(1); }
+window.addEventListener('resize', resizeMatrix);
+resizeMatrix();
+
+function animateMatrix() {
+    if (mRainActive) {
+        mCtx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Transparencia para efecto estela
+        mCtx.fillRect(0, 0, mCanvas.width, mCanvas.height);
+        
+        mCtx.fillStyle = '#FF0004'; // Rojo Chillón
+        mCtx.font = '16px "JetBrains Mono"';
+        
+        for (let i = 0; i < mDrops.length; i++) {
+            const char = mCharSet[Math.floor(Math.random() * mCharSet.length)];
+            mCtx.fillText(char, i * 16, mDrops[i] * 16);
+            
+            if (mDrops[i] * 16 > mCanvas.height && Math.random() > 0.98) {
+                mDrops[i] = 0;
+            }
+            mDrops[i]++;
+        }
+        requestAnimationFrame(animateMatrix);
+    }
+}
+
+// EFECTO CIFRADO (SCRAMBLE)
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
 document.querySelectorAll('.scramble-text').forEach(el => {
     el.addEventListener('mouseenter', () => {
@@ -94,13 +155,14 @@ document.querySelectorAll('.scramble-text').forEach(el => {
 });
 
 // =========================================
-// 4. TERMINAL DE CONTACTO INTERACTIVO
+// 3. TERMINAL CON COMANDOS OCULTOS
 // =========================================
 const btnTerminal = document.getElementById('lanzar-terminal');
 const termOverlay = document.getElementById('contact-terminal');
 const termInput = document.getElementById('contact-input');
 const termOutput = document.getElementById('contact-output');
 const termClose = document.getElementById('term-close');
+const autoScrollText = document.getElementById('sys-status');
 
 let termStep = 0;
 let userData = { nombre: '', asunto: '', mensaje: '' };
@@ -108,7 +170,7 @@ let userData = { nombre: '', asunto: '', mensaje: '' };
 btnTerminal.addEventListener('click', (e) => {
     e.preventDefault();
     termOverlay.style.display = 'flex';
-    termOutput.innerHTML = "> INICIANDO PROTOCOLO DE CONEXIÓN...<br>> ESTABLECIENDO CANAL SEGURO... [OK]<br><br>> POR FAVOR, INTRODUZCA IDENTIFICACIÓN (Nombre):";
+    termOutput.innerHTML = "> INICIANDO CONEXIÓN SEGURA... [OK]<br>> PROTOCOLO AXIOMA ACTIVO.<br><br>> IDENTIFICACIÓN DE VECTOR (Nombre):";
     termStep = 0;
     setTimeout(() => termInput.focus(), 100);
 });
@@ -119,10 +181,34 @@ termInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && termInput.value.trim() !== '') {
         const val = termInput.value.trim();
         playSound('click');
-        termOutput.innerHTML += `<br><span style="color:#F5F4F0">${val}</span>`;
+        termOutput.innerHTML += `<br><span style="color:#F5F4F0">>_ ${val}</span>`;
         termInput.value = '';
-
-        if (termStep === 0) {
+        
+        // COMANDOS OCULTOS
+        if (val.toLowerCase() === '/help') {
+            termOutput.innerHTML += `<br><br>> COMANDOS DISPONIBLES:<br>> /matrix - Inicia Lluvia Roja.<br>> /stop - Detiene Matrix.<br>> /clear - Limpia la consola.<br>> /exit - Cierra el Terminal.`;
+        } else if (val.toLowerCase() === '/clear') {
+            termOutput.innerHTML = `> CONSOLA LIMPIADA.<br>> SISTEMA AXIOMA LISTO.`;
+            termStep = 3; // Estado neutral
+        } else if (val.toLowerCase() === '/exit') {
+            termClose.click();
+        } else if (val.toLowerCase() === '/matrix') {
+            termOutput.innerHTML += `<br><br>> EJECUTANDO PROTOCOLO_RED_RAIN... [OK]`;
+            mRainActive = true;
+            meshActive = false; // Paramos la red de puntos (Optimización)
+            mCanvas.style.display = 'block';
+            systemHalted = true; // Paramos el auto-scroll UX
+            autoScrollText.innerText = '[ SYS_OVERRIDE: MATRIX ]';
+            animateMatrix();
+        } else if (val.toLowerCase() === '/stop') {
+            termOutput.innerHTML += `<br><br>> DETENIENDO PROTOCOLO_RED_RAIN... [OK]`;
+            mRainActive = false;
+            meshActive = true; // Reiniciamos red
+            mCanvas.style.display = 'none';
+        }
+        
+        // FLUJO DE CONTACTO NORMAL
+        else if (termStep === 0) {
             userData.nombre = val;
             termOutput.innerHTML += `<br><br>> VERIFICADO: ${userData.nombre}.<br>> DEFINA VECTOR DE ASUNTO:`;
             termStep++;
@@ -133,12 +219,9 @@ termInput.addEventListener('keydown', (e) => {
         } else if (termStep === 2) {
             userData.mensaje = val;
             termOutput.innerHTML += `<br><br>> ENCRIPTANDO PAQUETE DE DATOS...<br>> TRANSMITIENDO A SERVIDOR CENTRAL...`;
-            
-            // Simulación de envío
             setTimeout(() => {
                 termOutput.innerHTML += `<br><br><span style="color:#00FF00">> PAQUETE ENVIADO CON ÉXITO. FIN DE LA CONEXIÓN.</span>`;
                 playSound('click');
-                // Aquí podrías conectar una API real (como EmailJS o Formspree) usando los datos de userData
                 setTimeout(() => { termOverlay.style.display = 'none'; }, 2000);
             }, 1500);
         }
@@ -147,48 +230,71 @@ termInput.addEventListener('keydown', (e) => {
 });
 
 // =========================================
-// 5. NÚCLEO, AUDIO, EASTER EGG Y PRELOADER
+// MOTOR DE AUDIO
 // =========================================
-// (Todo lo demás se mantiene idéntico, estructurado para funcionar modularmente)
-
-// Easter Egg
-let secretCode = ['a', 'x', 'i', 'o', 'm', 'a']; let keyHistory = [];
-document.addEventListener('keydown', (e) => {
-    keyHistory.push(e.key.toLowerCase()); keyHistory.splice(-secretCode.length - 1, keyHistory.length - secretCode.length);
-    if (keyHistory.join('') === secretCode.join('')) { document.body.classList.toggle('god-mode'); playSound('click'); document.getElementById('sys-status').innerText = '[ MODO DIOS: ACTIVADO ]'; }
-});
-
-// Menú Contextual
-const ctxMenu = document.getElementById('context-menu');
-document.addEventListener('contextmenu', (e) => { e.preventDefault(); ctxMenu.style.display = 'flex'; ctxMenu.style.left = e.clientX + 'px'; ctxMenu.style.top = e.clientY + 'px'; playSound('hover'); });
-document.addEventListener('click', (e) => { if(!ctxMenu.contains(e.target)) ctxMenu.style.display = 'none'; });
-document.querySelector('.ctx-copy').addEventListener('click', () => { navigator.clipboard.writeText(window.location.href); ctxMenu.style.display = 'none'; });
-document.querySelector('.ctx-audio').addEventListener('click', () => { document.getElementById('audio-toggle').click(); ctxMenu.style.display = 'none'; });
-document.querySelector('.ctx-reload').addEventListener('click', () => { location.reload(); });
-
-// Telemetría
-const hudTime = document.getElementById('hud-time'); const hudNode = document.getElementById('hud-node');
-try { hudNode.innerText = Intl.DateTimeFormat().resolvedOptions().timeZone.split('/')[1].toUpperCase() || "UNKNOWN"; } catch(e) { hudNode.innerText = "LOCAL_NODE"; }
-setInterval(() => { hudTime.innerText = new Date().toTimeString().split(' ')[0]; }, 1000);
-
-// Audio
 let audioCtx; let soundEnabled = true;
 function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); }
 function playSound(type) {
     if (!soundEnabled || !audioCtx) return;
     const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination);
-    if (type === 'hover') { osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime); gain.gain.setValueAtTime(0.05, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); osc.start(); osc.stop(audioCtx.currentTime + 0.1); } 
-    else if (type === 'click') { osc.type = 'square'; osc.frequency.setValueAtTime(150, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.15); gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15); osc.start(); osc.stop(audioCtx.currentTime + 0.15); }
+    if (type === 'hover') { osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime); gain.gain.setValueAtTime(0.05, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+    } else if (type === 'click') { osc.type = 'square'; osc.frequency.setValueAtTime(150, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.15); gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15); osc.start(); osc.stop(audioCtx.currentTime + 0.15); }
 }
 document.getElementById('audio-toggle').addEventListener('click', () => { soundEnabled = !soundEnabled; document.getElementById('audio-toggle').innerText = soundEnabled ? '[ SOUND: ON ]' : '[ SOUND: OFF ]'; });
 
-// Preloader & Init
+// =========================================
+// 5. BOTÓN DE TEMA CLARO/OSCURO
+// =========================================
+const themeToggle = document.getElementById('theme-toggle');
+themeToggle.addEventListener('click', () => {
+    initAudio(); playSound('click');
+    document.body.classList.toggle('light-mode');
+    themeToggle.innerText = document.body.classList.contains('light-mode') ? '[ THEME: DARK ]' : '[ THEME: LIGHT ]';
+});
+
+// =========================================
+// 2. PRELOADER & MEMORIA DE USUARIO (LocalStorage)
+// =========================================
 const preloader = document.getElementById('preloader'); const termText = document.getElementById('term-text'); const startBtn = document.getElementById('start-btn');
 const lines = ["> CONECTANDO CON SERVIDOR CENTRAL...", "> VERIFICANDO SINTAXIS_FÍSICA... [OK]", "> COMPILANDO LÓGICA_APLICADA... [OK]", "> CARGANDO MÓDULOS_GRÁFICOS... [OK]", "> SISTEMA AXIOMA LISTO."];
 let lineIdx = 0;
+
 function typeTerminal() { if (lineIdx < lines.length) { termText.innerHTML += lines[lineIdx] + "<br>"; lineIdx++; setTimeout(typeTerminal, 400); } else { startBtn.style.display = 'block'; } }
-window.addEventListener('load', () => { setTimeout(typeTerminal, 500); });
-startBtn.addEventListener('click', () => { initAudio(); playSound('click'); preloader.style.opacity = '0'; setTimeout(() => { preloader.style.display = 'none'; iniciarSistema(); }, 500); });
+
+window.addEventListener('load', () => { 
+    initAudio(); // Intento de desbloqueo táctico
+    
+    // Comprobar memoria de sistema
+    if (localStorage.getItem('axioma_visted_today') === 'true') {
+        // Saltar Intro
+        preloader.style.display = 'none';
+        iniciarSistema();
+        document.getElementById('sys-status').innerText = '[ RECONEXIÓN RÁPIDA ESTABLECIDA ]';
+        document.getElementById('sys-status').style.color = 'var(--gris-codigo)';
+    } else {
+        // Primera vez o caché limpia
+        setTimeout(typeTerminal, 500); 
+    }
+});
+
+startBtn.addEventListener('click', () => {
+    initAudio(); playSound('click'); preloader.style.opacity = '0';
+    // Guardar memoria para hoy
+    localStorage.setItem('axioma_visted_today', 'true');
+    setTimeout(() => { preloader.style.display = 'none'; iniciarSistema(); }, 500);
+});
+
+// =========================================
+// CONTROL GLOBAL DE SCROLL
+// =========================================
+let isPaused = false; let systemHalted = false; 
+const autoScrollText = document.getElementById('sys-status');
+const isMobile = window.innerWidth <= 768;
+
+function autoScroll() {
+    if (Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 2) { systemHalted = true; autoScrollText.innerText = '[ EXEC_COMPLETE ]'; autoScrollText.style.color = 'var(--gris-codigo)'; }
+    if (!isPaused && !systemHalted && !isMobile) window.scrollBy({ top: 1, left: 0, behavior: 'auto' }); requestAnimationFrame(autoScroll);
+}
 
 function iniciarSistema() {
     window.addEventListener('scroll', () => { document.getElementById('scroll-progress').style.height = `${document.documentElement.scrollTop / (document.documentElement.scrollHeight - document.documentElement.clientHeight) * 100}%`; });
@@ -197,24 +303,40 @@ function iniciarSistema() {
     const grain = document.getElementById('grain-filter');
     window.addEventListener('scroll', () => { grain.style.opacity = '0.08'; clearTimeout(grain.timer); grain.timer = setTimeout(() => { grain.style.opacity = '0.04'; }, 150); });
     
-    let isPaused = false; let systemHalted = false; const sysStatus = document.getElementById('sys-status'); const isMobile = window.innerWidth <= 768;
-    function autoScroll() {
-        if (Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 2) { systemHalted = true; sysStatus.innerText = '[ EXEC_COMPLETE ]'; sysStatus.style.color = 'var(--gris-codigo)'; }
-        if (!isPaused && !systemHalted && !isMobile) window.scrollBy({ top: 1, left: 0, behavior: 'auto' }); requestAnimationFrame(autoScroll);
-    }
     if(!isMobile) setTimeout(() => { requestAnimationFrame(autoScroll); }, 1500);
     
-    // Pausas del scroll añadidas a la nueva Galería de Proyectos
     document.querySelectorAll('.hover-pause').forEach(el => { el.addEventListener('mouseenter', () => { isPaused = true; playSound('hover'); }); el.addEventListener('mouseleave', () => isPaused = false); });
-    document.querySelectorAll('.text-stop, p, h1, h2, h3, h4').forEach(el => { el.addEventListener('click', () => { if(!systemHalted) { document.body.classList.add('flash-override'); playSound('click'); setTimeout(() => document.body.classList.remove('flash-override'), 100); } systemHalted = true; sysStatus.innerText = '[ SYS_MANUAL_OVERRIDE ]'; sysStatus.style.color = 'var(--gris-codigo)'; }); });
+    document.querySelectorAll('.text-stop, p, h1, h2, h3, h4').forEach(el => {
+        el.addEventListener('click', () => { if(!systemHalted) { document.body.classList.add('flash-override'); playSound('click'); setTimeout(() => document.body.classList.remove('flash-override'), 100); } systemHalted = true; autoScrollText.innerText = '[ SYS_MANUAL_OVERRIDE ]'; autoScrollText.style.color = 'var(--gris-codigo)'; });
+    });
     
     const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('in-view'); }); }, { threshold: 0.1 }); 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     
     if(!isMobile) {
         document.querySelectorAll('.magnetic').forEach(btn => { btn.addEventListener('mousemove', function(e) { const rect = btn.getBoundingClientRect(); btn.querySelector('.mag-text').style.transform = `translate(${(e.clientX - rect.left - rect.width / 2) * 0.15}px, ${(e.clientY - rect.top - rect.height / 2) * 0.25}px)`; }); btn.addEventListener('mouseleave', function() { btn.querySelector('.mag-text').style.transform = `translate(0px, 0px)`; }); });
+        
+        // =========================================
+        // 1. MOTOR TILT 3D (HOLOGRÁFICO)
+        // =========================================
+        const tiltCards = document.querySelectorAll('.3d-tilt');
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                const centerX = rect.width / 2; const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / 15) * -1; const rotateY = (x - centerX) / 15;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                card.style.transition = 'none';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                card.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+            });
+        });
     }
 }
 
 // Seguridad
+document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('dragstart', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });

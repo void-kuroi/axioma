@@ -17,6 +17,8 @@
 <body>
     
     <canvas id="mesh-canvas"></canvas>
+    
+    <canvas id="matrix-canvas" style="display: none;"></canvas>
 
     <div id="preloader">
         <div class="term-text" id="term-text"></div>
@@ -57,7 +59,12 @@
         <a href="#contacto" class="radar-dot" aria-label="Ir a Telemetría"><span class="radar-label">04_TELEMETRÍA</span></a>
     </nav>
 
-    <div id="audio-toggle" class="interactive-sound">[ SOUND: ON ]</div>
+    <div id="ui-controls">
+        <div id="audio-toggle" class="interactive-sound control-btn">[ SOUND: ON ]</div>
+        <div id="theme-toggle" class="control-btn">[ THEME: LIGHT ]</div>
+    </div>
+
+    <div id="cursor-ghost-container"></div>
     <div id="cursor-x-glitch"><span class="c1">X</span><span class="c2">X</span></div>
 
     <section id="hero">
@@ -79,19 +86,19 @@
     <section id="servicios">
         <div class="section-header dark-header reveal"><p class="scramble-text">[02] // VECTORES_DE_ACCIÓN</p></div>
         <div class="vectores-grid">
-            <div class="vector-card hover-pause interactive-sound text-stop reveal delay-1">
+            <div class="vector-card 3d-tilt hover-pause interactive-sound text-stop reveal delay-1">
                 <div class="card-line"></div>
                 <h3 class="vector-titulo scramble-text"><span class="rojo">&gt;</span> SINTAXIS_FÍSICA</h3>
                 <h4 class="vector-subtitulo">Hardware & Ensamblaje.</h4>
                 <p class="vector-texto">Diagnóstico, reparación a nivel componente y ensamblaje de sistemas de alto rendimiento.</p>
             </div>
-            <div class="vector-card hover-pause interactive-sound text-stop reveal delay-2">
+            <div class="vector-card 3d-tilt hover-pause interactive-sound text-stop reveal delay-2">
                 <div class="card-line"></div>
                 <h3 class="vector-titulo scramble-text"><span class="rojo">&gt;</span> TOPOLOGÍA</h3>
                 <h4 class="vector-subtitulo">Redes & Estructura.</h4>
                 <p class="vector-texto">Diseño, despliegue y mantenimiento de infraestructuras de red. Cableado estructurado sin fisuras.</p>
             </div>
-            <div class="vector-card hover-pause interactive-sound text-stop reveal delay-3">
+            <div class="vector-card 3d-tilt hover-pause interactive-sound text-stop reveal delay-3">
                 <div class="card-line"></div>
                 <h3 class="vector-titulo scramble-text"><span class="rojo">&gt;</span> LÓGICA_APLICADA</h3>
                 <h4 class="vector-subtitulo">Software & DEV.</h4>
@@ -103,22 +110,22 @@
     <section id="proyectos">
         <div class="section-header reveal"><p class="scramble-text">[03] // BÓVEDA_CÓDIGO_FUENTE</p></div>
         <div class="galeria-proyectos hover-pause reveal delay-1">
-            <div class="proyecto-card">
+            <div class="proyecto-card 3d-tilt">
                 <div class="p-id">SYS.001</div>
                 <h3>Arquitectura Servidores</h3>
                 <p>Despliegue de red de alto rendimiento para entorno corporativo.</p>
             </div>
-            <div class="proyecto-card">
+            <div class="proyecto-card 3d-tilt">
                 <div class="p-id">SYS.002</div>
                 <h3>E-Commerce Core</h3>
                 <p>Desarrollo Full-Stack con pasarela de pagos encriptada.</p>
             </div>
-            <div class="proyecto-card">
+            <div class="proyecto-card 3d-tilt">
                 <div class="p-id">SYS.003</div>
                 <h3>Rig de Computación</h3>
                 <p>Ensamblaje y refrigeración líquida custom para renderizado 3D.</p>
             </div>
-            <div class="proyecto-card">
+            <div class="proyecto-card 3d-tilt">
                 <div class="p-id">SYS.004</div>
                 <h3>Auditoría Ciberseguridad</h3>
                 <p>Análisis de vulnerabilidades y fortificación de endpoints.</p>
@@ -130,7 +137,7 @@
         <div class="section-header reveal"><p class="scramble-text">[04] // TELEMETRÍA</p></div>
         <div class="telemetria-content">
             <ul class="lista-enlaces">
-                <li class="reveal delay-1"><a href="#" class="enlace-gigante magnetic hover-pause interactive-sound text-stop"><span class="mag-text">[ INSTAGRAM ] -> RÉGISTRO_VISUAL</span></a></li>
+                <li class="reveal delay-1"><a href="#" class="enlace-gigante magnetic hover-pause interactive-sound text-stop instagram-link"><span class="mag-text">[ INSTAGRAM ] -> RÉGISTRO_VISUAL</span></a></li>
                 <li class="reveal delay-2"><a href="#" class="enlace-gigante magnetic hover-pause interactive-sound text-stop"><span class="mag-text">[ TIKTOK ] -> BITÁCORA_DINÁMICA</span></a></li>
                 <li class="reveal delay-3"><a href="#" class="enlace-gigante magnetic hover-pause interactive-sound text-stop"><span class="mag-text">[ GITHUB ] -> REPOSITORIO_CÓDIGO</span></a></li>
                 <li class="reveal delay-4"><a href="#" id="lanzar-terminal" class="enlace-gigante magnetic hover-pause interactive-sound text-stop"><span class="mag-text">[ CONTACTO ] -> PROTOCOLO_ACTIVO</span></a></li>
