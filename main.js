@@ -288,7 +288,6 @@ startBtn.addEventListener('click', () => {
 // CONTROL GLOBAL DE SCROLL
 // =========================================
 let isPaused = false; let systemHalted = false; 
-const autoScrollText = document.getElementById('sys-status');
 const isMobile = window.innerWidth <= 768;
 
 function autoScroll() {
