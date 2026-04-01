@@ -3,143 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AXIOMA | Estructura. Ejecución. Sin fisuras.</title>
-    <meta name="description" content="El Tech Studio donde convergen SMR y DEV. Garantizamos la lógica innegable desde el hardware hasta el código.">
+    <title>AXIOMA | Hardware Engine v1.0 [3D_REAL]</title>
     <link rel="icon" type="image/svg+xml" href="logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Jost:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="engine-style.css">
 </head>
 <body>
-    
-    <canvas id="mesh-canvas"></canvas>
-    
-    <canvas id="matrix-canvas" style="display: none;"></canvas>
 
     <div id="preloader">
         <div class="term-text" id="term-text"></div>
-        <div class="start-btn blink" id="start-btn">[ CLIC PARA INICIAR SISTEMA ]</div>
+        <div class="start-btn blink" id="start-btn">[ INICIAR MOTOR_3D ]</div>
     </div>
 
-    <div id="contact-terminal" style="display: none;">
-        <div id="term-close">[ X ] CERRAR_CONEXIÓN</div>
-        <div class="terminal-window">
-            <div id="contact-output"></div>
-            <div class="input-line">
-                <span class="prompt-arrow">>_</span>
-                <input type="text" id="contact-input" autocomplete="off">
-            </div>
-        </div>
-    </div>
-
-    <div class="grain" id="grain-filter"></div>
-    <div id="scroll-progress-container"><div id="scroll-progress"></div></div>
-
-    <div id="context-menu">
-        <div class="ctx-item ctx-copy">> COPIAR_ENLACE_NODO</div>
-        <div class="ctx-item ctx-audio">> ALTERAR_AUDIO_SYS</div>
-        <div class="ctx-item ctx-reload">> FORZAR_REINICIO_ROOT</div>
-    </div>
-
-    <div id="telemetry-hud">
-        SYS_STATUS: <span class="hud-live">ONLINE</span><br>
-        NODO_ACTUAL: <span id="hud-node">CALCULANDO...</span><br>
-        SYNC_LOCAL: <span id="hud-time">00:00:00</span>
-    </div>
-
-    <nav id="radar-nav" aria-label="Navegación Radar">
-        <a href="#hero" class="radar-dot active" aria-label="Ir a Inicio"><span class="radar-label">00_INIT</span></a>
-        <a href="#manifiesto" class="radar-dot" aria-label="Ir a Manifiesto"><span class="radar-label">01_NÚCLEO</span></a>
-        <a href="#servicios" class="radar-dot" aria-label="Ir a Servicios"><span class="radar-label">02_VECTORES</span></a>
-        <a href="#proyectos" class="radar-dot" aria-label="Ir a Proyectos"><span class="radar-label">03_BÓVEDA</span></a>
-        <a href="#contacto" class="radar-dot" aria-label="Ir a Telemetría"><span class="radar-label">04_TELEMETRÍA</span></a>
-    </nav>
-
-    <div id="ui-controls">
-        <div id="audio-toggle" class="interactive-sound control-btn">[ SOUND: ON ]</div>
-    </div>
-
+    <div id="cursor-ghost-container"></div>
     <div id="cursor-x-glitch"><span class="c1">X</span><span class="c2">X</span></div>
 
-    <section id="hero">
-        <div class="hero-content">
-            <img src="logo.svg" alt="AXIOMA Logo" class="logo-principal interactive-sound">
-            <p class="hero-subtitle scramble-text">Estructura. Ejecución. Sin fisuras.</p>
-        </div>
-        <div class="scroll-indicator"><p id="sys-status">[ AUTO_EXEC_INIT ]</p></div>
-    </section>
+    <div id="app-container">
+        
+        <aside id="control-panel">
+            <div class="panel-header control-module">
+                <h1 class="logo">AXIOMA // ENGINE</h1>
+                <p class="version">v1.0.0 [WEBGL_BUILD]</p>
+            </div>
 
-    <section id="manifiesto">
-        <div class="manifiesto-content">
-            <div class="section-header reveal"><p class="scramble-text">[01] // MANIFIESTO_NÚCLEO</p></div>
-            <h2 class="definicion text-stop reveal delay-1">Proposición tan clara y evidente que se admite sin demostración.</h2>
-            <p class="presentacion text-stop reveal delay-2">El Tech Studio donde convergen <span class="redacted">SMR</span> y <span class="redacted">DEV</span>. No reparamos sistemas; garantizamos su <span class="redacted">lógica innegable</span> desde el hardware físico hasta la última línea de <span class="redacted">código</span>.</p>
-        </div>
-    </section>
+            <div class="control-module">
+                <label>[00] _SELECCIÓN_HARDWARE</label>
+                <select id="hardware-select" class="axioma-input interactive-sound">
+                    <optgroup label="Generación 17">
+                        <option value="ip17pm">iPhone 17 Pro Max</option>
+                        <option value="ip17pro">iPhone 17 Pro</option>
+                        <option value="ip17air">iPhone 17 Air [SLIM_MODULE]</option>
+                        <option value="ip17std">iPhone 17 Standard</option>
+                    </optgroup>
+                    <optgroup label="Generación 16">
+                        <option value="ip16pm">iPhone 16 Pro Max</option>
+                        <option value="ip16std">iPhone 16 Standard [VERT_CAM]</option>
+                    </optgroup>
+                </select>
+            </div>
 
-    <section id="servicios">
-        <div class="section-header dark-header reveal"><p class="scramble-text">[02] // VECTORES_DE_ACCIÓN</p></div>
-        <div class="vectores-grid">
-            <div class="vector-card 3d-tilt hover-pause interactive-sound text-stop reveal delay-1">
-                <div class="card-line"></div>
-                <h3 class="vector-titulo scramble-text"><span class="rojo">&gt;</span> SINTAXIS_FÍSICA</h3>
-                <h4 class="vector-subtitulo">Hardware & Ensamblaje.</h4>
-                <p class="vector-texto">Diagnóstico, reparación a nivel componente y ensamblaje de sistemas de alto rendimiento.</p>
+            <div class="control-module">
+                <label>[01] _MATERIAL_BASE (MATE)</label>
+                <div class="color-picker-grid">
+                    <div class="color-picker-dot interactive-sound active" style="background: #1C1E22;" data-color-hex="#1C1E22" title="Negro Pizarra"></div>
+                    <div class="color-picker-dot interactive-sound" style="background: #F5F4F0;" data-color-hex="#F5F4F0" title="Blanco Hueso"></div>
+                    <div class="color-picker-dot interactive-sound" style="background: #8B8D91;" data-color-hex="#8B8D91" title="Gris Código"></div>
+                    <div class="color-picker-dot interactive-sound" style="background: #FF0004;" data-color-hex="#FF0004" title="Rojo Axioma"></div>
+                </div>
             </div>
-            <div class="vector-card 3d-tilt hover-pause interactive-sound text-stop reveal delay-2">
-                <div class="card-line"></div>
-                <h3 class="vector-titulo scramble-text"><span class="rojo">&gt;</span> TOPOLOGÍA</h3>
-                <h4 class="vector-subtitulo">Redes & Estructura.</h4>
-                <p class="vector-texto">Diseño, despliegue y mantenimiento de infraestructuras de red. Cableado estructurado sin fisuras.</p>
-            </div>
-            <div class="vector-card 3d-tilt hover-pause interactive-sound text-stop reveal delay-3">
-                <div class="card-line"></div>
-                <h3 class="vector-titulo scramble-text"><span class="rojo">&gt;</span> LÓGICA_APLICADA</h3>
-                <h4 class="vector-subtitulo">Software & DEV.</h4>
-                <p class="vector-texto">Desarrollo de soluciones web y aplicaciones multiplataforma. Del concepto al despliegue.</p>
-            </div>
-        </div>
-    </section>
 
-    <section id="proyectos">
-        <div class="section-header reveal"><p class="scramble-text">[03] // BÓVEDA_CÓDIGO_FUENTE</p></div>
-        <div class="galeria-proyectos hover-pause reveal delay-1">
-            <div class="proyecto-card 3d-tilt interactive-sound">
-                <div class="p-id">SYS.001</div>
-                <h3>Arquitectura Servidores</h3>
-                <p>Despliegue de red de alto rendimiento para entorno corporativo.</p>
+            <div class="control-module">
+                <label>[02] _MÓDULO_CÁMARA</label>
+                <div class="btn-group">
+                    <button class="finish-selector-btn interactive-sound axioma-btn" data-target="camera-bump" data-finish="#E6E5E1">Plata Metálico</button>
+                    <button class="finish-selector-btn interactive-sound axioma-btn" data-target="camera-bump" data-finish="#111111">Titanio Void</button>
+                </div>
             </div>
-            <div class="proyecto-card 3d-tilt interactive-sound">
-                <div class="p-id">SYS.002</div>
-                <h3>E-Commerce Core</h3>
-                <p>Desarrollo Full-Stack con pasarela de pagos encriptada.</p>
-            </div>
-            <div class="proyecto-card 3d-tilt interactive-sound">
-                <div class="p-id">SYS.003</div>
-                <h3>Rig Computación</h3>
-                <p>Ensamblaje y refrigeración líquida custom para renderizado 3D.</p>
-            </div>
-            <div class="proyecto-card 3d-tilt interactive-sound">
-                <div class="p-id">SYS.004</div>
-                <h3>Auditoría Ciberseguridad</h3>
-                <p>Análisis de vulnerabilidades y fortificación de endpoints.</p>
-            </div>
-        </div>
-    </section>
 
-    <section id="contacto">
-        <div class="section-header reveal"><p class="scramble-text">[04] // TELEMETRÍA</p></div>
-        <div class="telemetria-content">
-            <ul class="lista-enlaces">
-                <li class="reveal delay-1"><a href="#" class="enlace-gigante magnetic hover-pause interactive-sound text-stop"><span class="mag-text">[ INSTAGRAM ] -> RÉGISTRO_VISUAL</span></a></li>
-                <li class="reveal delay-2"><a href="#" class="enlace-gigante magnetic hover-pause interactive-sound text-stop"><span class="mag-text">[ TIKTOK ] -> BITÁCORA_DINÁMICA</span></a></li>
-                <li class="reveal delay-3"><a href="#" class="enlace-gigante magnetic hover-pause interactive-sound text-stop"><span class="mag-text">[ GITHUB ] -> REPOSITORIO_CÓDIGO</span></a></li>
-                <li class="reveal delay-4"><a href="#" id="lanzar-terminal" class="enlace-gigante magnetic hover-pause interactive-sound text-stop"><span class="mag-text">[ CONTACTO ] -> PROTOCOLO_ACTIVO</span></a></li>
-            </ul>
-        </div>
-    </section>
+            <div class="control-module">
+                <label>[05] _MAPEO_UV (TEXTURA ÚNICA)</label>
+                <button id="upload-graphic-btn" class="interactive-sound axioma-btn action-red">[+] INYECTAR_GRÁFICO (JPG/PNG)</button>
+                <input type="file" id="graphic-upload-input" accept="image/png, image/jpeg" style="display: none;">
+            </div>
 
-    <script src="main.js"></script>
+            <div class="system-status-box control-module">
+                <p id="engine-status">> ESPERANDO INSTRUCCIONES...</p>
+            </div>
+        </aside>
+
+        <main id="render-stage">
+            <div id="audio-toggle" class="interactive-sound control-btn corner-btn">[ SOUND: ON ]</div>
+            </main>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script src="axioma-engine.js"></script>
 </body>
 </html>
