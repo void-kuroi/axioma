@@ -7,35 +7,31 @@
     --fuente-tecnica: 'JetBrains Mono', monospace;
 }
 
-/* ESTRUCTURA BASE */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { scroll-behavior: auto !important; scroll-snap-type: none !important; overflow-x: hidden; height: auto; }
 ::-webkit-scrollbar { display: none; }
 body { -ms-overflow-style: none; scrollbar-width: none; background-color: var(--blanco-hueso); color: var(--negro-pizarra); font-family: var(--fuente-principal); }
 body, a, img, button, input { cursor: none !important; user-select: none; -webkit-touch-callout: none; }
 
-/* CANVAS (MALLA Y MATRIX) */
 #mesh-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; opacity: 1; }
 #matrix-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 10; pointer-events: none; opacity: 0.8; }
-
-/* TEXTURA RUIDO */
 .grain { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 100; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); opacity: 0.04; mix-blend-mode: multiply; }
 
-/* CURSOR GLITCH (Fijo Rojo-Blanco, Sin Exclusion) */
+/* CURSOR GLITCH (Rojo puro, sin invertir colores) */
 #cursor-x-glitch { 
     width: 25px; height: 25px; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999999; 
     transform: translate(-50%, -50%); font-family: var(--fuente-tecnica); font-weight: bold; font-size: 1.5rem; 
     display: flex; align-items: center; justify-content: center; 
+    color: var(--rojo-chillon) !important;
 }
 #cursor-x-glitch span { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-.c1 { animation: cursor-splitTop 0.6s steps(2) infinite; color: var(--blanco-hueso); opacity: 0.5; } /* Detrás, sombra blanca */
-.c2 { animation: cursor-splitBottom 0.6s steps(1) infinite; color: var(--rojo-chillon); } /* Delante, rojo normal */
+.c1 { animation: cursor-splitTop 0.6s steps(2) infinite; color: var(--rojo-chillon); }
+.c2 { animation: cursor-splitBottom 0.6s steps(1) infinite; color: var(--rojo-chillon); }
 
 @keyframes cursor-splitTop { 0% { transform: translate(0); } 25% { transform: translate(-2px, -1px); } 50% { transform: translate(2px, 1px); } 75% { transform: translate(-2px, 1px); } 100% { transform: translate(0); } }
 @keyframes cursor-splitBottom { 0% { transform: translate(0); } 25% { transform: translate(2px, 1px); } 50% { transform: translate(-2px, -1px); } 75% { transform: translate(2px, -1px); } 100% { transform: translate(0); } }
 .visor-clic { transform: translate(-50%, -50%) scale(0.6) !important; }
 
-/* PRELOADER INTRO */
 #preloader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--negro-pizarra); color: var(--blanco-hueso); font-family: var(--fuente-tecnica); z-index: 9999999999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: left; transition: opacity 0.5s ease; cursor: none; }
 .term-text { max-width: 600px; width: 90%; font-size: 1.2rem; line-height: 1.8; }
 .blink { animation: blink 1s infinite; }
@@ -43,7 +39,6 @@ body, a, img, button, input { cursor: none !important; user-select: none; -webki
 .start-btn { margin-top: 30px; color: var(--rojo-chillon); font-weight: bold; font-size: 1.2rem; display: none; padding: 10px; border: 1px dashed transparent; transition: 0.3s; }
 .start-btn:hover { border-color: var(--rojo-chillon); background: rgba(255,0,4,0.1); }
 
-/* TERMINAL DE CONTACTO */
 #contact-terminal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(28, 30, 34, 0.95); backdrop-filter: blur(10px); z-index: 9999999; display: flex; justify-content: center; align-items: center; }
 #term-close { position: absolute; top: 40px; right: 40px; color: var(--rojo-chillon); font-family: var(--fuente-tecnica); font-weight: bold; transition: 0.2s; }
 #term-close:hover { color: var(--blanco-hueso); }
@@ -52,22 +47,15 @@ body, a, img, button, input { cursor: none !important; user-select: none; -webki
 .input-line { display: flex; align-items: center; color: var(--rojo-chillon); }
 #contact-input { background: transparent; border: none; color: var(--blanco-hueso); font-family: var(--fuente-tecnica); font-size: 1rem; width: 100%; outline: none; margin-left: 10px; }
 
-/* MENÚ CONTEXTUAL CÓDIGO FUENTE */
-#context-menu { position: fixed; width: 220px; background: #000; border: 1px solid var(--rojo-chillon); display: none; flex-direction: column; z-index: 99999999; font-family: var(--fuente-tecnica); box-shadow: 10px 10px 30px rgba(0,0,0,0.5); }
-.context-item { padding: 12px 20px; color: var(--blanco-hueso); transition: 0.1s; border-bottom: 1px solid #111; font-size: 0.8rem; letter-spacing: 1px; }
-.context-item:hover { background: rgba(255,0,4,0.1); color: var(--rojo-chillon); }
-.ctx-header { color: var(--gris-codigo); pointer-events: none; border-bottom: 1px solid var(--rojo-chillon); font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
-
-/* TELEMETRÍA Y UI */
 #telemetry-hud { position: fixed; bottom: 30px; right: 30px; text-align: right; z-index: 9999; font-family: var(--fuente-tecnica); font-size: 0.75rem; color: var(--gris-codigo); line-height: 1.4; pointer-events: none; }
 .hud-live { color: #FF0004; animation: blink 1s infinite; }
-
 #scroll-progress-container { position: fixed; top: 0; right: 0; width: 3px; height: 100vh; background: rgba(0,0,0,0.05); z-index: 9999; }
 #scroll-progress { width: 100%; height: 0%; background: var(--rojo-chillon); transition: height 0.1s; }
 
+/* NAVEGACIÓN RADAR A 12PX */
 #radar-nav { position: fixed; left: 30px; top: 50%; transform: translateY(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 20px; }
-.radar-dot { width: 8px; height: 8px; background: var(--gris-codigo); border-radius: 50%; transition: all 0.3s; }
-.radar-dot.active { background: var(--rojo-chillon); transform: scale(1.5); box-shadow: 0 0 10px var(--rojo-chillon); }
+.radar-dot { width: 12px; height: 12px; background: var(--gris-codigo); border-radius: 50%; transition: all 0.3s; }
+.radar-dot.active { background: var(--rojo-chillon); transform: scale(1.4); box-shadow: 0 0 12px var(--rojo-chillon); }
 .radar-label { position: absolute; left: 25px; font-family: var(--fuente-tecnica); font-size: 0.8rem; color: var(--rojo-chillon); opacity: 0; transition: 0.3s; pointer-events: none; white-space: nowrap; }
 .radar-dot:hover { background: var(--negro-pizarra); }
 .radar-dot:hover .radar-label { opacity: 1; transform: translateX(5px); }
@@ -76,11 +64,9 @@ body, a, img, button, input { cursor: none !important; user-select: none; -webki
 .control-btn { font-family: var(--fuente-tecnica); font-size: 0.9rem; color: var(--gris-codigo); transition: color 0.3s; }
 .control-btn:hover { color: var(--rojo-chillon); }
 
-/* SECCIONES BASE */
 section { min-height: 100vh; display: flex; flex-direction: column; padding: 60px 100px; position: relative; z-index: 10; }
 #servicios { background-color: var(--negro-pizarra); color: var(--blanco-hueso); }
 
-/* HERO & MANIFIESTO */
 #hero { justify-content: center; align-items: center; text-align: center; }
 .logo-principal { width: 600px; max-width: 90vw; margin-bottom: 20px; }
 .hero-subtitle { font-family: var(--fuente-tecnica); color: var(--negro-pizarra); font-size: 1.2rem; letter-spacing: 2px; }
@@ -96,7 +82,6 @@ section { min-height: 100vh; display: flex; flex-direction: column; padding: 60p
 #servicios .redacted { background-color: var(--blanco-hueso); color: var(--blanco-hueso); }
 #servicios:hover .redacted { background-color: transparent; color: var(--rojo-chillon); }
 
-/* SERVICIOS Y PROYECTOS */
 .vectores-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 80px; width: 100%; max-width: 1200px; margin: auto; }
 .vector-card { text-align: left; position: relative; padding-top: 20px; }
 .card-line { position: absolute; top: 0; left: 0; width: 0%; height: 2px; background-color: var(--rojo-chillon); transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1); z-index: 5; }
@@ -115,7 +100,6 @@ section { min-height: 100vh; display: flex; flex-direction: column; padding: 60p
 .proyecto-card h3 { font-size: 2.5rem; line-height: 1.1; margin-bottom: 15px; }
 .proyecto-card p { font-size: 1.1rem; color: var(--gris-codigo); }
 
-/* CONTACTO Y ENLACES */
 #contacto { justify-content: center; align-items: flex-end; text-align: right; }
 .telemetria-content { width: 100%; max-width: 1300px; margin: 0 auto; }
 .lista-enlaces { list-style: none; }
@@ -124,7 +108,6 @@ section { min-height: 100vh; display: flex; flex-direction: column; padding: 60p
 .mag-text { display: inline-block; font-family: var(--fuente-principal); font-size: 4.5rem; font-weight: 700; line-height: 1; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease; }
 .enlace-gigante:hover .mag-text { color: var(--rojo-chillon); }
 
-/* REVEAL ANIMATIONS */
 .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
 .reveal.in-view { opacity: 1; transform: translateY(0); }
 .delay-1 { transition-delay: 0.1s; }
@@ -132,7 +115,6 @@ section { min-height: 100vh; display: flex; flex-direction: column; padding: 60p
 .delay-3 { transition-delay: 0.3s; }
 .delay-4 { transition-delay: 0.4s; }
 
-/* MÓVILES */
 @media (max-width: 768px) {
     #cursor-x-glitch, #radar-nav, #scroll-progress-container, .grain, #mesh-canvas, #telemetry-hud, #matrix-canvas { display: none !important; } 
     body, a, img, input, button { cursor: auto !important; } 
