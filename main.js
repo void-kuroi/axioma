@@ -1,6 +1,6 @@
 /**
  * =======================================================================
- * AXIOMA | CORE SYSTEM LOGIC (Página Principal)
+ * AXIOMA | CORE SYSTEM LOGIC (v1.0.0 - BLINDADO)
  * =======================================================================
  */
 
@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if(mCanvas) { mRainActive = true; meshActive = false; mCanvas.style.display = 'block'; systemHalted = true; if(sysStatusText) sysStatusText.innerText = '[ SYS_OVERRIDE: MATRIX ]'; animateMatrix(); }
                 } else if (val.toLowerCase() === '/stop') {
                     termOutput.innerHTML += `<br><br>> DETENIENDO PROTOCOLO_RED_RAIN... [OK]`;
-                    mRainActive = false; meshActive = true; if(mCanvas) mCanvas.style.display = 'none';
+                    mRainActive = false; meshActive = true; if(mCanvas) { mRainActive = false; meshActive = true; if(mCanvas) mCanvas.style.display = 'none'; }
                 } else if (termStep === 0) {
                     userData.nombre = val; termOutput.innerHTML += `<br><br>> VERIFICADO: ${userData.nombre}.<br>> DEFINA VECTOR DE ASUNTO:`; termStep++;
                 } else if (termStep === 1) {
@@ -248,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } 
     }
 
-    // Animación sin condicionales: siempre arranca.
+    // Ejecutamos la animación SIEMPRE
     if (preloader) {
         setTimeout(typeBootSequence, 500); 
     }
@@ -332,6 +332,40 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     }
+
+    // MENÚ CONTEXTUAL CÓDIGO FUENTE (REINSTALADO)
+    const ctxMenu = document.getElementById('context-menu');
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault(); 
+        if(!isMobile && ctxMenu) {
+            ctxMenu.style.display = 'flex';
+            ctxMenu.style.left = e.clientX + 'px';
+            ctxMenu.style.top = e.clientY + 'px';
+            playSound('hover');
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if(ctxMenu && !ctxMenu.contains(e.target)) ctxMenu.style.display = 'none';
+    });
+
+    document.querySelector('.ctx-copy')?.addEventListener('click', () => {
+        navigator.clipboard.writeText(window.location.href);
+        if(ctxMenu) ctxMenu.style.display = 'none';
+    });
+
+    document.querySelector('.ctx-audio')?.addEventListener('click', () => {
+        btnAudioToggle.click();
+        if(ctxMenu) ctxMenu.style.display = 'none';
+    });
+
+    document.querySelector('.ctx-reload')?.addEventListener('click', () => {
+        location.reload();
+    });
+
+    document.querySelector('.ctx-exit')?.addEventListener('click', () => {
+        if(ctxMenu) ctxMenu.style.display = 'none';
+    });
 
     // Telemetría de Tiempo HUD
     const hudTime = document.getElementById('hud-time'); 
