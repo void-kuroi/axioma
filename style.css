@@ -21,16 +21,15 @@ body, a, img, button, input { cursor: none !important; user-select: none; -webki
 /* TEXTURA RUIDO */
 .grain { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 100; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); opacity: 0.04; mix-blend-mode: multiply; }
 
-/* CURSOR GLITCH (Rojo Fijo Garantizado) */
+/* CURSOR GLITCH (Fijo Rojo-Blanco, Sin Exclusion) */
 #cursor-x-glitch { 
     width: 25px; height: 25px; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999999; 
     transform: translate(-50%, -50%); font-family: var(--fuente-tecnica); font-weight: bold; font-size: 1.5rem; 
     display: flex; align-items: center; justify-content: center; 
-    color: var(--rojo-chillon) !important;
 }
 #cursor-x-glitch span { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-.c1 { animation: cursor-splitTop 0.6s steps(2) infinite; color: var(--rojo-chillon); }
-.c2 { animation: cursor-splitBottom 0.6s steps(1) infinite; color: var(--rojo-chillon); }
+.c1 { animation: cursor-splitTop 0.6s steps(2) infinite; color: var(--blanco-hueso); opacity: 0.5; } /* Detrás, sombra blanca */
+.c2 { animation: cursor-splitBottom 0.6s steps(1) infinite; color: var(--rojo-chillon); } /* Delante, rojo normal */
 
 @keyframes cursor-splitTop { 0% { transform: translate(0); } 25% { transform: translate(-2px, -1px); } 50% { transform: translate(2px, 1px); } 75% { transform: translate(-2px, 1px); } 100% { transform: translate(0); } }
 @keyframes cursor-splitBottom { 0% { transform: translate(0); } 25% { transform: translate(2px, 1px); } 50% { transform: translate(-2px, -1px); } 75% { transform: translate(2px, -1px); } 100% { transform: translate(0); } }
@@ -53,6 +52,12 @@ body, a, img, button, input { cursor: none !important; user-select: none; -webki
 .input-line { display: flex; align-items: center; color: var(--rojo-chillon); }
 #contact-input { background: transparent; border: none; color: var(--blanco-hueso); font-family: var(--fuente-tecnica); font-size: 1rem; width: 100%; outline: none; margin-left: 10px; }
 
+/* MENÚ CONTEXTUAL CÓDIGO FUENTE */
+#context-menu { position: fixed; width: 220px; background: #000; border: 1px solid var(--rojo-chillon); display: none; flex-direction: column; z-index: 99999999; font-family: var(--fuente-tecnica); box-shadow: 10px 10px 30px rgba(0,0,0,0.5); }
+.context-item { padding: 12px 20px; color: var(--blanco-hueso); transition: 0.1s; border-bottom: 1px solid #111; font-size: 0.8rem; letter-spacing: 1px; }
+.context-item:hover { background: rgba(255,0,4,0.1); color: var(--rojo-chillon); }
+.ctx-header { color: var(--gris-codigo); pointer-events: none; border-bottom: 1px solid var(--rojo-chillon); font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
+
 /* TELEMETRÍA Y UI */
 #telemetry-hud { position: fixed; bottom: 30px; right: 30px; text-align: right; z-index: 9999; font-family: var(--fuente-tecnica); font-size: 0.75rem; color: var(--gris-codigo); line-height: 1.4; pointer-events: none; }
 .hud-live { color: #FF0004; animation: blink 1s infinite; }
@@ -60,10 +65,9 @@ body, a, img, button, input { cursor: none !important; user-select: none; -webki
 #scroll-progress-container { position: fixed; top: 0; right: 0; width: 3px; height: 100vh; background: rgba(0,0,0,0.05); z-index: 9999; }
 #scroll-progress { width: 100%; height: 0%; background: var(--rojo-chillon); transition: height 0.1s; }
 
-/* RADAR DE NAVEGACIÓN (Puntos Grandes 12px) */
 #radar-nav { position: fixed; left: 30px; top: 50%; transform: translateY(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 20px; }
-.radar-dot { width: 12px; height: 12px; background: var(--gris-codigo); border-radius: 50%; transition: all 0.3s; }
-.radar-dot.active { background: var(--rojo-chillon); transform: scale(1.4); box-shadow: 0 0 12px var(--rojo-chillon); }
+.radar-dot { width: 8px; height: 8px; background: var(--gris-codigo); border-radius: 50%; transition: all 0.3s; }
+.radar-dot.active { background: var(--rojo-chillon); transform: scale(1.5); box-shadow: 0 0 10px var(--rojo-chillon); }
 .radar-label { position: absolute; left: 25px; font-family: var(--fuente-tecnica); font-size: 0.8rem; color: var(--rojo-chillon); opacity: 0; transition: 0.3s; pointer-events: none; white-space: nowrap; }
 .radar-dot:hover { background: var(--negro-pizarra); }
 .radar-dot:hover .radar-label { opacity: 1; transform: translateX(5px); }
